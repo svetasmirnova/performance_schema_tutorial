@@ -1,0 +1,87 @@
+- name: install percona server
+  hosts: all
+  become: yes
+  tasks:
+    - name: install ssh-server
+      package:
+        name: openssh-server
+        update_cache: yes
+        state: present
+    - name: enable and start sshd
+      systemd:
+        name: ssh
+        state: started
+        enabled: yes
+    - name: install menu program
+      package:
+        name: dialog
+        update_cache: no
+        state: present
+    - name: Add tutorial user dba
+      user:
+        name: dba
+        # password: '$6$d39yrnA5zDYp$r2uhiKsop500d9lOQ6N3p5bmTMlTZvciCyrT57Jh9TQ3qDwNoftcDhiNXjsh2hkoLFPs5BbEsjdz/zG/Swo3c.' # ohmei2OoJ
+        password: '$6$sxCcXCx7kc$EU3/Svab3oYoEkZ2bGmTvg4oirRqlydOX8bdY.dq3zH7NT5jMSqrjXrswJd0WaIyxM4Ts2YHAhvh19Npl2Ih80' # dba
+        state: present
+        shell: /bin/bash
+    - name: add tutorial script to bashrc
+      lineinfile:
+        path: /home/dba/.bashrc
+        line: /home/vagrant/tutorial/tutorials.sh
+        insertafter: EOF
+    - name: install mysql deps
+      package: name={{item}} update_cache=no state=present
+      with_items:
+        - cpanminus
+        - libatomic1
+        - libaio1
+        - libnuma1
+        - tmux
+    - name: add src for build-dep
+      lineinfile:
+        path: /etc/apt/sources.list
+        line: "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
+        insertafter: EOF
+    - name: build-dep for mysql sandbox
+      apt:
+        name: mysql-sandbox
+        state: build-dep
+        update_cache: yes
+    - name: install mysql sandbox
+      cpanm:
+        name: "MySQL::Sandbox"
+    - name: Download percona server
+      get_url:
+        url: https://www.percona.com/downloads/Percona-Server-LATEST/Percona-Server-5.7.23-23/binary/tarball/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
+        dest: /home/dba/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
+        mode: 0644
+        owner: dba
+        timeout: 600
+    - name: Download MySQL 8
+      get_url:
+        url: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.12-linux-glibc2.12-x86_64.tar.xz
+        dest: /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.xz
+        mode: 0644
+        owner: dba
+        timeout: 600
+    - name: repack MySQL 8
+      shell: xzcat /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.xz | gzip > /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz
+      args:
+        creates: /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz
+    - name: secure vagrant user password
+      user:
+        name: vagrant
+        password: "$6$MquRdkwe4rmH0Q6W$vxsRTIakrDDMbzWibJ8qcvrz5W/.LDl5lpBn/kZPM719SGq4RN2UYHjwuSyadJCUkkGvYGeSxZCwEz2i8lp.j0"
+    # keep allow password login at the end, if downloads failed notify is not executed and not executed for further vagrant up --provision
+    - name: allow password login
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: 'PasswordAuthentication no'
+        replace: 'PasswordAuthentication yes'
+        backup: no
+      notify: restart sshd
+  handlers:
+    - name: restart sshd
+      service:
+        name: ssh
+        state: restarted
