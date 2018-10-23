@@ -59,8 +59,8 @@
         timeout: 600
     - name: Download MySQL 8
       get_url:
-        url: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.12-linux-glibc2.12-x86_64.tar.xz
-        dest: /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.xz
+        url: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
+        dest: /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
         mode: 0644
         owner: dba
         timeout: 600

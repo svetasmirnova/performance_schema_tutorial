@@ -5,9 +5,9 @@ source /home/vagrant/tutorial/common-single.sh
 use test < /home/vagrant/tutorial/017-variables.setup.sql
 # create load
 (
-sysbench --db-driver=mysql --test=/usr/share/doc/sysbench/tests/db/oltp.lua --mysql-socket=/tmp/mysql_sandbox5717.sock --mysql-user=msandbox --mysql-password=msandbox --mysql-db=test --oltp-tables-count=8 --oltp-table-size=1000 prepare
-sysbench --db-driver=mysql --test=/usr/share/doc/sysbench/tests/db/oltp.lua --mysql-socket=/tmp/mysql_sandbox5717.sock --mysql-user=msandbox --mysql-password=msandbox --mysql-db=test --num-threads=8 --max-requests=0 --max-time=10000 run &
-sandboxes/$msb_path/use test -e "CALL perform_load()"
+sb oltp_read_write.lua --tables-count=8 --table-size=1000 prepare
+sb oltp_read_write.lua --num-threads=8 --max-requests=0 --max-time=10000 run &
+use test -e "CALL perform_load()"
 ) &>load.log &
 /usr/bin/clear
 echo -e $HINT

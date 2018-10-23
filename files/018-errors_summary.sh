@@ -1,5 +1,5 @@
 #!/bin/bash
-DESCRIPTION="Find all occasions of statements with errors"
+DESCRIPTION="Find all occasions of statements with errors, MySQL 8.0"
 HINT="Use Ctrl+b,c to create new window\nUse Ctrl+b,p or Ctrl+b,n to switch between next and previous window\n\nType CALL help_task() for help\n"
 source /home/vagrant/tutorial/common-single-8m.sh
 sql_users="set sql_mode=''; grant all on test.* to dummy@localhost identified by 'dummy'; grant all on test.* to web@localhost identified by 'web';"

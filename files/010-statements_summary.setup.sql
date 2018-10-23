@@ -13,7 +13,7 @@ CREATE PROCEDURE help_task()
 
 CREATE PROCEDURE help_solve()
  BEGIN
-   SELECT "pager less; select * from performance_schema.events_statements_summary_by_digest order by SUM_TIMER_WAIT DESC\G
+   SELECT "pager less; select * from performance_schema.events_statements_summary_by_digest ignore index(schema_name) order by SUM_TIMER_WAIT DESC\\G
            ... where SUM_NO_INDEX_USED > 0 
            ... where SUM_ROWS_EXAMINED/SUM_ROWS_SENT > 10 and SUM_ROWS_SENT > 0 " AS "task";
  END//

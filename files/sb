@@ -21,4 +21,4 @@ then
 else
 	SCRIPT="/usr/share/sysbench/$SCRIPT"
 fi
-sysbench --db-driver=mysql --mysql-user=msandbox --mysql-password=msandbox --mysql-socket=$SOCK "$SCRIPT" "${@:2}"
+sysbench --db-ps-mode=disable --db-driver=mysql --mysql-user=msandbox --mysql-password=msandbox --mysql-socket=$SOCK "$SCRIPT" "${@:2}"

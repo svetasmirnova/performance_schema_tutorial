@@ -5,8 +5,8 @@ source /home/vagrant/tutorial/common-single.sh
 use test < /home/vagrant/tutorial/011-prepared.setup.sql
 # create load
 (
-sysbench --db-driver=mysql --test=/usr/share/doc/sysbench/tests/db/oltp.lua --mysql-socket=/tmp/mysql_sandbox5717.sock --mysql-user=msandbox --mysql-password=msandbox --mysql-db=test  --oltp-table-size=1000 prepare
-sandboxes/$msb_path/use test 
+sb oltp_read_write.lua --table-size=1000 prepare
+use test 
 ) &>load.log &
 /usr/bin/clear
 echo -e $HINT
