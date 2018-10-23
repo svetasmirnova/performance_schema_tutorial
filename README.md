@@ -69,7 +69,52 @@ export AZURE_TENANT_ID AZURE_CLIENT_ID AZURE_CLIENT_SECRET AZURE_SUBSCRIPTION_ID
 * For Azure I was able to get the error `The resource group 'vagrant' is in deprovisioning state and cannot perform this operation.`
 It seems like it's not happening if I add `require azure-plugin` at the beginning of Vagrantfile. But you can also wait until VM and "Resource group" will disappear after previous VM deletion.
 
+## Typical usage scenario
+1. Start vagrant box: `vagrant up --provider=lxc`
+2. Create new tasks in files/NNN-testname.sh. Do not forget to add DESCRIPTION variable (menu item name).
+3. Update push changes to existing vagrant box: `vagrant provision`
+4. When you finished for today stop box: `vagrant halt`
+5. If you have created, but stopped box you can start it: `vagrant up`
+6. Renaming task files:
+  * login to box: `vagrant ssh`
+  * remove existing task files in box: `rm -rf tutorial/*`
+  * exit from vagrant ssh
+  * push all tutorial files to the box: `vagrant provision`
+7. During demonstration you should have pre-configured halted box, just start it: `vagrant up`. The box is already provisioned, thus it will not require internet connection to start.
 
+## Extending
+### Installing packages from apt
+`playbook.yml` file contains declarations what packages and files should be in the box. In order to add new packages add following lines before `# keep allow password login at the end` comment:
+```
+    - name: install sysbench
+      package:
+        name: sysbench
+        update_cache: no
+        state: present
+```
+`update_cache: yes` instructs ansible to run `apt update` before installing package.
 
+Be careful with spaces and tabs, yml format is like a python programming language.
 
+### Using sysbench
+* sysbench 1.0.11 is pre-installed.
+* Could be used from task script:
+```
+use test < /home/vagrant/tutorial/001-stored_procedure-setup.sql
+sb oltp_read_only.lua prepare
+```
+* Could be used from tmux window:
+```
+sb oltp_read_only.lua prepare
+sb oltp_read_only.lua run --threads=2 --time=60
+# you can also use full script path
+sb /usr/share/sysbench/oltp_read_only.lua run
+```
+* or even directly from mysql cli
+```
+master [localhost] {msandbox} (test) > \! sb oltp_read_only.lua run
+sysbench 1.0.11 (using system LuaJIT 2.1.0-beta3)
+...
+```
+* Both for single and master-slave setup (executed against master).
 

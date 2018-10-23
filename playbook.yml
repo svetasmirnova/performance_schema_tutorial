@@ -68,6 +68,11 @@
       shell: xzcat /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.xz | gzip > /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz
       args:
         creates: /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz
+    - name: install sysbench
+      package:
+        name: sysbench
+        update_cache: no
+        state: present
     - name: secure vagrant user password
       user:
         name: vagrant

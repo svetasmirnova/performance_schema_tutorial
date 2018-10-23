@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/home/vagrant/tutorial:$PATH
 
 if [ "x$CLIENT_ID" != "x" ] ; then
 	echo "Non-replication environment start mysql cli, type: use test"
@@ -8,9 +9,9 @@ if [ "x$CLIENT_ID" != "x" ] ; then
 	exit
 fi
 
-HEIGHT=15
+HEIGHT=20
 WIDTH=60
-CHOICE_HEIGHT=4
+CHOICE_HEIGHT=15
 BACKTITLE="Percona tutorials"
 TITLE="Performance Schema tutorial tasks"
 MENU="Choose one of the following options:"
