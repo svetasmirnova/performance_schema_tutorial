@@ -5,8 +5,8 @@ source /home/vagrant/tutorial/common-single.sh
 use test < /home/vagrant/tutorial/015-memory.setup.sql
 # create load
 (
-sysbench --db-driver=mysql --test=/usr/share/doc/sysbench/tests/db/oltp_simple.lua --mysql-socket=/tmp/mysql_sandbox5717.sock --mysql-user=msandbox --mysql-password=msandbox --mysql-db=test prepare
-sysbench --db-driver=mysql --test=/usr/share/doc/sysbench/tests/db/oltp_simple.lua --mysql-socket=/tmp/mysql_sandbox5717.sock --mysql-user=msandbox --mysql-password=msandbox --mysql-db=test --num-threads=2 --max-requests=10000000 --max-time=10000 run
+sb oltp_read_only.lua prepare
+sb oltp_read_only.lua run --threads=2 --events=10000000 --time=10000
 ) &>load.log &
 
 /usr/bin/clear
