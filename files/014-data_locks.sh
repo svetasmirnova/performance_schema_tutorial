@@ -1,7 +1,7 @@
 #!/bin/bash
 DESCRIPTION="Which transaction holds the lock?, MySQL 8.0"
 HINT="Use Ctrl+b,c to create new window\nUse Ctrl+b,p or Ctrl+b,n to switch between next and previous window\n\nType CALL help_task() for help\n"
-source /home/vagrant/tutorial/common-singlei-m8.sh
+source /home/vagrant/tutorial/common-single-m8.sh
 use test < /home/vagrant/tutorial/014-data_locks.setup.sql
 use test < /home/vagrant/tutorial/014-data_locks.dump.sql
 # create load

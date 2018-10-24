@@ -5,8 +5,7 @@ source /home/vagrant/tutorial/common-single.sh
 use test < /home/vagrant/tutorial/011-prepared.setup.sql
 # create load
 (
-sb oltp_read_write.lua --table-size=1000 prepare
-use test 
+sb oltp_read_write.lua --table-size=1000 --mysql-db=test prepare
 ) &>load.log &
 /usr/bin/clear
 echo -e $HINT

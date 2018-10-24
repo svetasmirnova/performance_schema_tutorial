@@ -4,6 +4,7 @@ HINT="Use Ctrl+b,c to create new window\nUse Ctrl+b,p or Ctrl+b,n to switch betw
 source /home/vagrant/tutorial/common-replication.sh
 m test < /home/vagrant/tutorial/016-broken-replication.setup.master.sql
 s1 test < /home/vagrant/tutorial/016-broken-replication.setup.slave.sql
+m test -e "insert into a values (NULL, 'a')"
 /usr/bin/clear
 echo -e $HINT
 sleep 5

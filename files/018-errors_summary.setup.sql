@@ -16,8 +16,8 @@ CREATE PROCEDURE help_task()
 CREATE PROCEDURE help_solve()
  BEGIN
    SELECT "select user, host, count(*) 
-from events_errors_summary_by_account_by_error where SUM_ERROR_RAISED>0 group by user, host; select user, host, ERROR_NAME, SUM_ERROR_RAISED, FIRST_SEEN, LAST_SEEN 
-from  events_errors_summary_by_account_by_error where SUM_ERROR_RAISED>0 ; " AS "task";
+from performance_schema.events_errors_summary_by_account_by_error where SUM_ERROR_RAISED>0 group by user, host; \nselect user, host, ERROR_NAME, SUM_ERROR_RAISED, FIRST_SEEN, LAST_SEEN 
+from  performance_schema.events_errors_summary_by_account_by_error where SUM_ERROR_RAISED>0 ; " AS "task";
  END//
 
 CREATE PROCEDURE help_prepare()

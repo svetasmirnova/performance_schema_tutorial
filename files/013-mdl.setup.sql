@@ -3,6 +3,9 @@ create database test;
 use test;
 create table test.a (id int) engine=innodb;
 
+-- We mush enable statemens instrumentation before running the task`
+-- UPDATE performance_schema.setup_instruments SET ENABLED = 'YES', timed = 'YES' WHERE NAME LIKE 'statement/%';
+-- UPDATE performance_schema.setup_consumers SET ENABLED = 'YES' WHERE NAME LIKE 'events_statements%';
 
 -- help
 delimiter //
