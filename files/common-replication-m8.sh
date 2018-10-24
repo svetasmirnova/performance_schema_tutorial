@@ -13,9 +13,9 @@ cleanup
 mkdir /home/dba/$CLIENT_ID
 cd /home/dba/$CLIENT_ID
 export SANDBOX_HOME=/home/dba/$CLIENT_ID
-make_replication_sandbox --how_many_slaves=1 /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz -- --no_show --check_port
-export PATH=/home/dba/$CLIENT_ID/rsandbox_mysql-8_0_12:$PATH
+make_replication_sandbox --how_many_slaves=1 /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz -- --no_show --check_port
+export PATH=/home/dba/$CLIENT_ID/rsandbox_mysql-8_0_13:$PATH
 
 
-/home/dba/$CLIENT_ID/rsandbox_mysql-8_0_12/master/my sqladmin --silent --wait  ping
-/home/dba/$CLIENT_ID/rsandbox_mysql-8_0_12/node1/my sqladmin --silent --wait  ping
+/home/dba/$CLIENT_ID/rsandbox_mysql-8_0_13/master/my sqladmin --silent --wait  ping
+/home/dba/$CLIENT_ID/rsandbox_mysql-8_0_13/node1/my sqladmin --silent --wait  ping

@@ -13,7 +13,7 @@ cleanup
 mkdir /home/dba/$CLIENT_ID
 cd /home/dba/$CLIENT_ID
 export SANDBOX_HOME=/home/dba/$CLIENT_ID
-make_sandbox /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz -- --no_show --check_port
-export PATH=/home/dba/$CLIENT_ID/msb_8_0_12:$PATH
+make_sandbox /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz -- --no_show --check_port
+export PATH=/home/dba/$CLIENT_ID/msb_8_0_13:$PATH
 
 my sqladmin --silent --wait  ping
