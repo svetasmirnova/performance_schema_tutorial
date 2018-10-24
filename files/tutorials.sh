@@ -37,7 +37,7 @@ CHOICE=$(dialog --clear \
 
 /usr/bin/clear
 if [ -e "${COMMANDS[$CHOICE]}" ] ; then
-  "${COMMANDS[$CHOICE]}" 
+  nice -n 19 "${COMMANDS[$CHOICE]}" 
   exec /home/vagrant/tutorial/tutorials.sh
 fi
 echo "Exiting from tutorial, $PPID"
