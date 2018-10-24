@@ -65,9 +65,9 @@
         owner: dba
         timeout: 600
     - name: repack MySQL 8
-      shell: xzcat /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.xz | gzip > /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz
+      shell: xzcat /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz | gzip > /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
       args:
-        creates: /home/dba/mysql-8.0.12-linux-glibc2.12-x86_64.tar.gz
+        creates: /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
     - name: install sysbench
       package:
         name: sysbench
