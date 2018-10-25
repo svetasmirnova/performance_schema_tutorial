@@ -9,6 +9,11 @@ if [ "x$CLIENT_ID" != "x" ] ; then
 	exit
 fi
 
+if [ `w|egrep '\<'$USER'\>'|wc -l` -gt 1 ] ; then
+	echo "You are already connected"
+	kill -HUP $PPID
+fi
+
 HEIGHT=20
 WIDTH=60
 CHOICE_HEIGHT=15

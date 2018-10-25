@@ -12,6 +12,6 @@ sb oltp_read_only.lua run --threads=2 --events=10000000 --time=10000
 /usr/bin/clear
 echo -e $HINT
 sleep 5
-tmux new-session -s "/home/dba/$CLIENT_ID/" -n mysql my sql test
+tmux new-session -n mysql my sql test
 cleanup
 

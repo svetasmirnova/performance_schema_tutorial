@@ -11,6 +11,6 @@ my sql -u dummy -pdummy < /home/vagrant/tutorial/018-errors_summary_t3.sql &>>er
 /usr/bin/clear
 echo -e $HINT
 sleep 5
-tmux new-session -s "/home/dba/$CLIENT_ID/" -n mysql my sql test
+tmux new-session -n mysql my sql test
 cleanup
 

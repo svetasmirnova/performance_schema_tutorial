@@ -8,7 +8,7 @@ m test -e "insert into a values (NULL, 'a')"
 /usr/bin/clear
 echo -e $HINT
 sleep 5
-tmux new-session -d -s "/home/dba/$CLIENT_ID/" -n master m test
-tmux new-window -t "/home/dba/$CLIENT_ID/" -n slave s1 test
-tmux attach -t "/home/dba/$CLIENT_ID/"
+tmux new-session -d -n master m test
+tmux new-window -n slave s1 test
+tmux attach
 cleanup

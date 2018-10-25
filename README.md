@@ -8,7 +8,7 @@ dpkg -i vagrant_2.1.5_x86_64.deb
 ## Access
 * Change password from default 'dba': https://serversforhackers.com/c/create-user-in-ansible
 * in virtualbox, connect to port 3622 with ssh
-* do not forget to modify vagrant and dba user passwords if you are going to run tutorial engine in cloud
+* do not forget to modify vagrant and dbaN users passwords if you are going to run tutorial engine in cloud
 
 ## Create addition tutorial items
 1. check examples, `001-stored_procedure.sh` for single instance, `002-broken-replication.sh` for master with one slave
@@ -52,14 +52,14 @@ AZURE_SUBSCRIPTION_ID="put value of id from az account show output"
 export AZURE_TENANT_ID AZURE_CLIENT_ID AZURE_CLIENT_SECRET AZURE_SUBSCRIPTION_ID
 ```
 8. In any bash shell intended for running vagrant up or ssh or destroy commands source access variables with `source envfile`
-9. Modify playbook.yml to have strong passwords for vagrant and dba account.
+9. Modify playbook.yml to have strong passwords for vagrant and dbaN accounts.
 10. Modify `Vagrantfile:az.vm_name` if needed (and VM size, currently it's 1 core & 1GB)
 11. *Uncomment* `require azure-plugin` at the beginning of Vagrantfile to avoid error:
 `The resource group 'vagrant' is in deprovisioning state and cannot perform this operation.`
 12. Start vagrant box
 `vagrant up --provider=azure`
 13. Wait until creation and ansible run will be finished
-14. Connect with attender account: `ssh dba@tutorialengine.westus.cloudapp.azure.com`
+14. Connect with attender account: `ssh dbaN@tutorialengine.westus.cloudapp.azure.com` where N from 1 to 50
 15. Do not forget to remove VM after work to avoid wasting money: `vagrant destroy -f`
 16. Check at https://portal.azure.com, VM should be destroyed completely after 10-15 minutes (Delete procedure is really slow)
 

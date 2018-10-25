@@ -13,6 +13,6 @@ use test < /home/vagrant/tutorial/013-mdl.setup.sql
 /usr/bin/clear
 echo -e $HINT
 sleep 5
-tmux new-session -s "/home/dba/$CLIENT_ID/" -n mysql my sql test
+tmux new-session -n mysql my sql test
 cleanup
 

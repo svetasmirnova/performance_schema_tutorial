@@ -17,18 +17,20 @@
         name: dialog
         update_cache: no
         state: present
-    - name: Add tutorial user dba
+    - name: Add tutorial user dbaN
       user:
-        name: dba
+        name: dba{{ item}}
         # password: '$6$d39yrnA5zDYp$r2uhiKsop500d9lOQ6N3p5bmTMlTZvciCyrT57Jh9TQ3qDwNoftcDhiNXjsh2hkoLFPs5BbEsjdz/zG/Swo3c.' # ohmei2OoJ
         password: '$6$sxCcXCx7kc$EU3/Svab3oYoEkZ2bGmTvg4oirRqlydOX8bdY.dq3zH7NT5jMSqrjXrswJd0WaIyxM4Ts2YHAhvh19Npl2Ih80' # dba
         state: present
         shell: /bin/bash
+      with_sequence: count=50
     - name: add tutorial script to bashrc
       lineinfile:
-        path: /home/dba/.bashrc
+        path: /home/dba{{ item }}/.bashrc
         line: /home/vagrant/tutorial/tutorials.sh
         insertafter: EOF
+      with_sequence: count=50
     - name: install mysql deps
       package: name={{item}} update_cache=no state=present
       with_items:
@@ -53,21 +55,31 @@
     - name: Download percona server
       get_url:
         url: https://www.percona.com/downloads/Percona-Server-LATEST/Percona-Server-5.7.23-23/binary/tarball/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
-        dest: /home/dba/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
+        dest: /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
         mode: 0644
-        owner: dba
+        owner: vagrant
         timeout: 600
     - name: Download MySQL 8
       get_url:
         url: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
-        dest: /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
+        dest: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
         mode: 0644
         owner: dba
         timeout: 600
     - name: repack MySQL 8
-      shell: xzcat /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz | gzip > /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+      shell: xzcat /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz | gzip > /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
       args:
-        creates: /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+        creates: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+    - name: unpack percona server
+      shell: tar -C /home/vagrant -xzf /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz; mv /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102 /home/vagrant/5.7.23
+      args:
+        creates: /home/vagrant/5.7.23
+        warn: false
+    - name: unpack mysql 8.0
+      shell: tar -C /home/vagrant -xaf /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz; mv /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64 /home/vagrant/8.0.13
+      args:
+        creates: /home/vagrant/8.0.13
+        warn: false
     - name: install sysbench
       package:
         name: sysbench
