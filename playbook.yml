@@ -1,6 +1,8 @@
 - name: install percona server
   hosts: all
   become: yes
+  vars:
+    dbdeployerver: "1.12.1"
   tasks:
     - name: install ssh-server
       package:
@@ -34,24 +36,30 @@
     - name: install mysql deps
       package: name={{item}} update_cache=no state=present
       with_items:
-        - cpanminus
         - libatomic1
         - libaio1
         - libnuma1
         - tmux
-    - name: add src for build-dep
-      lineinfile:
-        path: /etc/apt/sources.list
-        line: "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
-        insertafter: EOF
-    - name: build-dep for mysql sandbox
-      apt:
-        name: mysql-sandbox
-        state: build-dep
-        update_cache: yes
-    - name: install mysql sandbox
-      cpanm:
-        name: "MySQL::Sandbox"
+    - name: Download dbdeployer
+      get_url:
+        url: https://github.com/datacharmer/dbdeployer/releases/download/{{ dbdeployerver }}/dbdeployer-{{ dbdeployerver }}.linux.tar.gz
+        dest: /home/vagrant/dbdeployer-{{ dbdeployerver }}.linux.tar.gz
+        mode: 0644
+        owner: vagrant
+        timeout: 600
+    - name: unpack dbdeployer
+      shell: tar -C /usr/local/bin -xzf /home/vagrant/dbdeployer-{{ dbdeployerver }}.linux.tar.gz; mv /usr/local/bin/dbdeployer-{{ dbdeployerver }}.linux /usr/local/bin/dbdeployer; chmod 755 /usr/local/bin/dbdeployer
+      args:
+        creates: /usr/local/bin/dbdeployer
+        warn: false
+    - name: Create sandbox binary directory
+      file:
+        path: /home/vagrant/opt/{{ item }}
+        state: directory
+        owner: vagrant
+      with_items:
+        - percona
+        - mysql
     - name: Download percona server
       get_url:
         url: https://www.percona.com/downloads/Percona-Server-LATEST/Percona-Server-5.7.23-23/binary/tarball/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
@@ -64,22 +72,23 @@
         url: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
         dest: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
         mode: 0644
-        owner: dba
+        owner: vagrant
         timeout: 600
     - name: repack MySQL 8
-      shell: xzcat /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz | gzip > /home/dba/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+      shell: xzcat /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz | gzip > /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
       args:
         creates: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
-    - name: unpack percona server
-      shell: tar -C /home/vagrant -xzf /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz; mv /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102 /home/vagrant/5.7.23
-      args:
-        creates: /home/vagrant/5.7.23
         warn: false
-    - name: unpack mysql 8.0
-      shell: tar -C /home/vagrant -xaf /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz; mv /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64 /home/vagrant/8.0.13
+    - name: unpack percona server with dbdeploy
+      shell: dbdeployer unpack /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz --sandbox-binary=/home/vagrant/opt/percona
       args:
-        creates: /home/vagrant/8.0.13
-        warn: false
+        creates: /home/vagrant/opt/percona/5.7.23
+      become_user: vagrant
+    - name: unpack mysql 8.0 with dbdeploy
+      shell: dbdeployer unpack /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+      args:
+        creates: /home/vagrant/opt/mysql/8.0.13
+      become_user: vagrant
     - name: install sysbench
       package:
         name: sysbench

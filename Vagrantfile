@@ -13,7 +13,12 @@ Vagrant.configure("2") do |config|
     az.vm_image_urn = 'Canonical:UbuntuServer:18.04-LTS:latest'
     az.resource_group_name = 'vagrant'
   end
+  config.vm.provision "shell" do |s|
+    s.inline = "mkdir /vagrant; chown vagrant:vagrant /vagrant"
+    s.privileged = true
+  end
   config.vm.provision "file", source: "files", destination: "/home/vagrant/tutorial"
+  config.vm.provision "file", source: "playbook.yml", destination: "/vagrant/playbook.yml"
   config.vm.provision "ansible_local" do |ansible|
     ansible.compatibility_mode = "auto"
     ansible.playbook = "playbook.yml"
