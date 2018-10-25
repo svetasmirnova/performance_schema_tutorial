@@ -13,8 +13,20 @@ Vagrant.configure("2") do |config|
     az.vm_image_urn = 'Canonical:UbuntuServer:18.04-LTS:latest'
     az.resource_group_name = 'vagrant'
   end
+  config.vm.provider "aws" do |aws, override|
+    override.vm.box = "dummy"
+    override.ssh.private_key_path = '~/.ssh/id_rsa'
+    # Specify VM parameters
+    aws.access_key_id = "YOUR KEY"
+    aws.secret_access_key = "YOUR SECRET KEY"
+    aws.session_token = "SESSION TOKEN"
+    aws.keypair_name = "KEYPAIR NAME"
+    aws.ami = "ami-7747d01e"
+    override.ssh.username = "ubuntu"
+  end
+
   config.vm.provision "shell" do |s|
-    s.inline = "mkdir /vagrant; chown vagrant:vagrant /vagrant"
+    s.inline = "mkdir -p /vagrant; chown vagrant:vagrant /vagrant"
     s.privileged = true
   end
   config.vm.provision "file", source: "files", destination: "/home/vagrant/tutorial"
