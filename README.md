@@ -5,6 +5,12 @@ wget https://releases.hashicorp.com/vagrant/2.1.5/vagrant_2.1.5_x86_64.deb
 dpkg -i vagrant_2.1.5_x86_64.deb
 ```
 
+*Do not forget to generate passwords for users!*
+```
+update_passwords.sh
+```
+The script creates hashes at files/passwords.yml and userdetails.unencrypted.txt . First line of userdetails.unencrypted.txt belongs to dba1, last to dba50
+
 ## Access
 * Change password from default 'dba': https://serversforhackers.com/c/create-user-in-ansible
 * in virtualbox, connect to port 3622 with ssh

@@ -19,14 +19,17 @@
         name: dialog
         update_cache: no
         state: present
+    - name: Include passwords
+      include_vars:
+        file: /home/vagrant/tutorial/passwords.yml
+        name: dbausers
     - name: Add tutorial user dbaN
       user:
-        name: dba{{ item}}
-        # password: '$6$d39yrnA5zDYp$r2uhiKsop500d9lOQ6N3p5bmTMlTZvciCyrT57Jh9TQ3qDwNoftcDhiNXjsh2hkoLFPs5BbEsjdz/zG/Swo3c.' # ohmei2OoJ
-        password: '$6$sxCcXCx7kc$EU3/Svab3oYoEkZ2bGmTvg4oirRqlydOX8bdY.dq3zH7NT5jMSqrjXrswJd0WaIyxM4Ts2YHAhvh19Npl2Ih80' # dba
+        name: "{{ item.key }}"
+        password: "{{ item.value }}"
         state: present
         shell: /bin/bash
-      with_sequence: count=50
+      with_dict: "{{ dbausers }}"
     - name: add tutorial script to bashrc
       lineinfile:
         path: /home/dba{{ item }}/.bashrc
