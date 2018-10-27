@@ -15,18 +15,19 @@ Vagrant.configure("2") do |config|
   end
   config.vm.provider "aws" do |aws, override|
     override.vm.box = "dummy"
-    override.ssh.private_key_path = '~/.ssh/id_rsa'
+    override.ssh.private_key_path = '~/.ssh/id_rsa-hadar'
     # Specify VM parameters
-    aws.access_key_id = "YOUR KEY"
-    aws.secret_access_key = "YOUR SECRET KEY"
-    aws.session_token = "SESSION TOKEN"
-    aws.keypair_name = "KEYPAIR NAME"
-    aws.ami = "ami-7747d01e"
+    # aws.access_key_id = "YOUR KEY"
+    # aws.secret_access_key = "YOUR SECRET KEY"
+    # aws.session_token = "SESSION TOKEN"
+    aws.keypair_name = "nickolay.ihalainen"
+    # https://cloud-images.ubuntu.com/locator/ec2/
+    aws.ami = "ami-0cc10786e1d202f0c"
     override.ssh.username = "ubuntu"
   end
 
   config.vm.provision "shell" do |s|
-    s.inline = "mkdir -p /vagrant; chown vagrant:vagrant /vagrant"
+    s.inline = "(grep -q vagrant /etc/passwd || useradd -m vagrant );mkdir -p /vagrant /home/vagrant/tutorial; chown vagrant:adm /vagrant /home/vagrant/tutorial; chmod g+w -R /vagrant /home/vagrant/tutorial"
     s.privileged = true
   end
   config.vm.provision "file", source: "files", destination: "/home/vagrant/tutorial"

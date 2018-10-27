@@ -69,6 +69,23 @@ export AZURE_TENANT_ID AZURE_CLIENT_ID AZURE_CLIENT_SECRET AZURE_SUBSCRIPTION_ID
 15. Do not forget to remove VM after work to avoid wasting money: `vagrant destroy -f`
 16. Check at https://portal.azure.com, VM should be destroyed completely after 10-15 minutes (Delete procedure is really slow)
 
+## Running with Amazon AWS cloud
+https://github.com/mitchellh/vagrant-aws
+1. Install provider
+```
+vagrant plugin install vagrant-aws
+vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
+```
+2. Update Vagrant file to provide your account details. If aws configure was executed on your machine it's enough to change just:
+```
+override.ssh.private_key_path = '~/.ssh/id_rsa-hadar'
+aws.keypair_name = "nickolay.ihalainen"
+```
+3. Start the box `vagrant up --provider=aws`
+4. ssh dba1@ip
+5. Do not forget to shutdown with `vagrant destroy -f` to save money
+
+
 ## Troubleshooting
 * If you are not able to login with dba account with password, ansible failed first time, but finished after further vagrant up --provision, try to restart ssh daemon
 `vagrant ssh -- sudo systemctl restart ssh`
