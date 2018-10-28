@@ -12,8 +12,6 @@ my sql test -e   "CALL data_locks_trx2()" &
 sb oltp_read_write.lua --threads=4 --table-size=500000 --max-requests=0 --max-time=100000 --point-selects=0 --simple-ranges=0 --sum-ranges=0 --order-ranges=0 --distinct-ranges=0 --index-updates=0 --non-index-updates=0 run &
 ) &>load.log &
 /usr/bin/clear
-echo -e $HINT
-sleep 5
-tmux new-session -n mysql my sql test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
 cleanup
 

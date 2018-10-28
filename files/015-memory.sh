@@ -8,10 +8,7 @@ use test < /home/vagrant/tutorial/015-memory.setup.sql
 sb oltp_read_only.lua prepare
 sb oltp_read_only.lua run --threads=2 --events=10000000 --time=10000
 ) &>load.log &
-
 /usr/bin/clear
-echo -e $HINT
-sleep 5
-tmux new-session -n mysql my sql test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
 cleanup
 

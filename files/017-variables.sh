@@ -10,8 +10,6 @@ sb oltp_read_write.lua --num-threads=8 --max-requests=0 --max-time=10000 run &
 use test -e "CALL perform_load()"
 ) &>load.log &
 /usr/bin/clear
-echo -e $HINT
-sleep 5
-tmux new-session -n mysql my sql test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
 cleanup
 

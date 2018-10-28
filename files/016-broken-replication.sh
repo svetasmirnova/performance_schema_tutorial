@@ -6,9 +6,7 @@ m test < /home/vagrant/tutorial/016-broken-replication.setup.master.sql
 s1 test < /home/vagrant/tutorial/016-broken-replication.setup.slave.sql
 m test -e "insert into a values (NULL, 'a')"
 /usr/bin/clear
-echo -e $HINT
-sleep 5
-tmux new-session -d -n master m test
-tmux new-window -n slave s1 test
+tmux new-session -d -n master /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" m -s --prompt='mysql> ' -t test
+tmux new-window -n slave /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" s1 -s --prompt='mysql> ' -t test
 tmux attach
 cleanup

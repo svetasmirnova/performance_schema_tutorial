@@ -4,7 +4,5 @@ HINT="Use Ctrl+b,c to create new window\nUse Ctrl+b,p or Ctrl+b,n to switch betw
 source /home/vagrant/tutorial/common-single.sh
 use test < /home/vagrant/tutorial/012-stored_procedure-setup.sql
 /usr/bin/clear
-echo -e $HINT
-sleep 5
-tmux new-session -n mysql my sql test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
 cleanup

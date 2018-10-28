@@ -17,3 +17,8 @@ trap cleanup SIGHUP SIGTERM
 
 cleanup
 
+function pause() {
+  read -p "Press [Enter] to start task..."
+}
+
+echo "Starting task, please wait..."

@@ -14,6 +14,7 @@ if [ `w|egrep '\<'$USER'\>'|wc -l` -gt 1 ] ; then
 	kill -HUP $PPID
 fi
 
+DEFAULT_ITEM="${1:-0}"
 HEIGHT=20
 WIDTH=60
 CHOICE_HEIGHT=15
@@ -33,6 +34,7 @@ done < /tmp/description.txt
 rm /tmp/description.txt
 
 CHOICE=$(dialog --clear \
+                --default-item "$DEFAULT_ITEM" \
                 --backtitle "$BACKTITLE" \
                 --title "$TITLE" \
                 --menu "$MENU" \
@@ -43,7 +45,7 @@ CHOICE=$(dialog --clear \
 /usr/bin/clear
 if [ -e "${COMMANDS[$CHOICE]}" ] ; then
   nice -n 19 "${COMMANDS[$CHOICE]}" 
-  exec /home/vagrant/tutorial/tutorials.sh
+  exec /home/vagrant/tutorial/tutorials.sh "$CHOICE"
 fi
 echo "Exiting from tutorial, $PPID"
 kill -HUP $PPID

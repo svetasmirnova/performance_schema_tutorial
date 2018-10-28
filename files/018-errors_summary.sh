@@ -9,8 +9,6 @@ my sql -u web -pweb < /home/vagrant/tutorial/018-errors_summary_t1.sql &>>errors
 my sql -u web -pweb < /home/vagrant/tutorial/018-errors_summary_t2.sql &>>errors_summary.err &
 my sql -u dummy -pdummy < /home/vagrant/tutorial/018-errors_summary_t3.sql &>>errors_summary.err
 /usr/bin/clear
-echo -e $HINT
-sleep 5
-tmux new-session -n mysql my sql test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
 cleanup
 
