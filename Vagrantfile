@@ -24,6 +24,8 @@ Vagrant.configure("2") do |config|
     # https://cloud-images.ubuntu.com/locator/ec2/
     aws.ami = "ami-0cc10786e1d202f0c"
     override.ssh.username = "ubuntu"
+
+    aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 }]
   end
 
   config.vm.provision "shell" do |s|
@@ -37,9 +39,27 @@ Vagrant.configure("2") do |config|
     ansible.playbook = "playbook.yml"
     ansible.compatibility_mode = "2.0"
   end
-  config.vm.network "forwarded_port", guest: 22, host: 3622, host_ip: "0.0.0.0"
   config.vm.provider "virtualbox" do |v|
     v.memory = 4096
     v.cpus = 2
+  end
+
+  config.vm.define "default", primary: true do |default|
+    default.vm.network "forwarded_port", guest: 22, host: 3622, host_ip: "0.0.0.0"
+  end
+  config.vm.define "tut1", autostart: false do |tut1|
+    tut1.vm.network "forwarded_port", guest: 22, host: 3623, host_ip: "0.0.0.0"
+  end
+  config.vm.define "tut2", autostart: false do |tut2|
+    tut2.vm.network "forwarded_port", guest: 22, host: 3624, host_ip: "0.0.0.0"
+  end
+  config.vm.define "tut3", autostart: false do |tut3|
+    tut3.vm.network "forwarded_port", guest: 22, host: 3625, host_ip: "0.0.0.0"
+  end
+  config.vm.define "tut4", autostart: false do |tut4|
+    tut4.vm.network "forwarded_port", guest: 22, host: 3626, host_ip: "0.0.0.0"
+  end
+  config.vm.define "tut5", autostart: false do |tut5|
+    tut5.vm.network "forwarded_port", guest: 22, host: 3627, host_ip: "0.0.0.0"
   end
 end
