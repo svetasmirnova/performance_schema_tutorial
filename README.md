@@ -91,6 +91,17 @@ aws.keypair_name = "nickolay.ihalainen"
 `vagrant ssh -- sudo systemctl restart ssh`
 * For Azure I was able to get the error `The resource group 'vagrant' is in deprovisioning state and cannot perform this operation.`
 It seems like it's not happening if I add `require azure-plugin` at the beginning of Vagrantfile. But you can also wait until VM and "Resource group" will disappear after previous VM deletion.
+* If you are getting:
+```
+TASK [Include passwords] *******************************************************
+fatal: [default]: FAILED! => {"ansible_facts": {"dbausers": {}}, "ansible_included_var_files": [], "changed": false, "message": "Could not find or access '/home/vagrant/tutorial/passwords.yml' on the Ansible Controller.\nIf you are using a module and expect the file to exist on the remote, see the remote_src option"}
+```
+Run `./update_passwords.sh` . It uses mkpasswd tool (on debian/ubuntu there is `apt install whois` prerequirement.
+On OS X there is no mkpasswd tool, but we can use slower simulation in python:
+```
+pip3 install passlib
+replace mkpasswd -s --method=sha-512 with ./makepasswd-sha-512 in update_passwords.sh
+```
 
 ## Typical usage scenario
 1. Start vagrant box: `vagrant up --provider=lxc`
