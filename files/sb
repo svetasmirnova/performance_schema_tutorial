@@ -1,0 +1,24 @@
+#!/bin/bash
+# executes sysbench, could be used in tmux tabs or in scripts after sandbox initialization
+# Usage:
+# sb oltp_read_only.lua prepare
+# sb oltp_read_only.lua run --time=60
+## full path to lua script also could be used:
+# sb /usr/share/sysbench/oltp_read_only.lua run --threads=2
+SOCK=$(cat $(ls $SANDBOX_HOME/*/*.cnf $SANDBOX_HOME/*/*/*.cnf 2>/dev/null|grep -v auto.cnf|head -n1)|grep -F -A 4 '[client]'|grep socket|awk '{print $3}')
+CREATEDB="create database if not exists sbtest"
+if [[ `command -v m` ]] ;
+then 
+	m -e "$CREATEDB"
+else
+	use -e "$CREATEDB"
+fi
+
+SCRIPT=$1
+if [[ "$SCRIPT" == /* ]] || [[ "$SCRIPT" == ./* ]] ;
+then
+	SCRIPT="$SCRIPT"
+else
+	SCRIPT="/usr/share/sysbench/$SCRIPT"
+fi
+sysbench --db-ps-mode=disable --db-driver=mysql --mysql-user=msandbox --mysql-password=msandbox --mysql-socket=$SOCK "$SCRIPT" "${@:2}"

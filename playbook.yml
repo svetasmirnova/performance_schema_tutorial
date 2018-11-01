@@ -1,0 +1,116 @@
+- name: install percona server
+  hosts: all
+  become: yes
+  vars:
+    dbdeployerver: "1.12.1"
+  tasks:
+    - name: install ssh-server
+      package:
+        name: openssh-server
+        update_cache: yes
+        state: present
+    - name: enable and start sshd
+      systemd:
+        name: ssh
+        state: started
+        enabled: yes
+    - name: install menu program
+      package:
+        name: dialog
+        update_cache: no
+        state: present
+    - name: Include passwords
+      include_vars:
+        file: /home/vagrant/tutorial/passwords.yml
+        name: dbausers
+    - name: Add tutorial user dbaN
+      user:
+        name: "{{ item.key }}"
+        password: "{{ item.value }}"
+        state: present
+        shell: /bin/bash
+      with_dict: "{{ dbausers }}"
+    - name: add tutorial script to bashrc
+      lineinfile:
+        path: /home/dba{{ item }}/.bashrc
+        line: /home/vagrant/tutorial/tutorials.sh
+        insertafter: EOF
+      with_sequence: count=50
+    - name: install mysql deps
+      package: name={{item}} update_cache=no state=present
+      with_items:
+        - libatomic1
+        - libaio1
+        - libnuma1
+        - tmux
+    - name: Download dbdeployer
+      get_url:
+        url: https://github.com/datacharmer/dbdeployer/releases/download/{{ dbdeployerver }}/dbdeployer-{{ dbdeployerver }}.linux.tar.gz
+        dest: /home/vagrant/dbdeployer-{{ dbdeployerver }}.linux.tar.gz
+        mode: 0644
+        owner: vagrant
+        timeout: 600
+    - name: unpack dbdeployer
+      shell: tar -C /usr/local/bin -xzf /home/vagrant/dbdeployer-{{ dbdeployerver }}.linux.tar.gz; mv /usr/local/bin/dbdeployer-{{ dbdeployerver }}.linux /usr/local/bin/dbdeployer; chmod 755 /usr/local/bin/dbdeployer
+      args:
+        creates: /usr/local/bin/dbdeployer
+        warn: false
+    - name: Create sandbox binary directory
+      file:
+        path: /home/vagrant/opt/{{ item }}
+        state: directory
+        owner: vagrant
+      with_items:
+        - percona
+        - mysql
+    - name: Download percona server
+      get_url:
+        url: https://www.percona.com/downloads/Percona-Server-LATEST/Percona-Server-5.7.23-23/binary/tarball/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
+        dest: /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
+        mode: 0644
+        owner: vagrant
+        timeout: 600
+    - name: Download MySQL 8
+      get_url:
+        url: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
+        dest: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
+        mode: 0644
+        owner: vagrant
+        timeout: 600
+    - name: repack MySQL 8
+      shell: xzcat /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz | gzip > /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+      args:
+        creates: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+        warn: false
+    - name: unpack percona server with dbdeploy
+      shell: dbdeployer unpack /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz --sandbox-binary=/home/vagrant/opt/percona
+      args:
+        creates: /home/vagrant/opt/percona/5.7.23
+      become_user: vagrant
+    - name: unpack mysql 8.0 with dbdeploy
+      shell: dbdeployer unpack /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+      args:
+        creates: /home/vagrant/opt/mysql/8.0.13
+      become_user: vagrant
+    - name: install sysbench
+      package:
+        name: sysbench
+        update_cache: no
+        state: present
+    - name: secure vagrant user password
+      user:
+        name: vagrant
+        password: "$6$MquRdkwe4rmH0Q6W$vxsRTIakrDDMbzWibJ8qcvrz5W/.LDl5lpBn/kZPM719SGq4RN2UYHjwuSyadJCUkkGvYGeSxZCwEz2i8lp.j0"
+    # keep allow password login at the end, if downloads failed notify is not executed and not executed for further vagrant up --provision
+    - name: allow password login
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: 'PasswordAuthentication no'
+        replace: 'PasswordAuthentication yes'
+        backup: no
+      notify: restart sshd
+  handlers:
+    - name: restart sshd
+      service:
+        name: ssh
+        state: restarted
