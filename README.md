@@ -9,7 +9,7 @@ dpkg -i vagrant_2.1.5_x86_64.deb
 ```
 update_passwords.sh
 ```
-The script creates hashes at files/passwords.yml and userdetails.unencrypted.txt . First line of userdetails.unencrypted.txt belongs to dba1, last to dba50
+The script creates password hashes in files/passwords.yml and user/password list in passwords-unencrypted.txt
 
 ## Access
 * Change password from default 'dba': https://serversforhackers.com/c/create-user-in-ansible
