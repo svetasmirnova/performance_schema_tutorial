@@ -11,6 +11,6 @@ use test < /home/vagrant/tutorial/013-mdl.setup.sql
    wait
    echo 'commit;') | use test ; do : ;done ) &>load.log &
 /usr/bin/clear
-tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql --prompt='mysql> ' -t test
 cleanup
 

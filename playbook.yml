@@ -2,7 +2,7 @@
   hosts: all
   become: yes
   vars:
-    dbdeployerver: "1.12.1"
+    dbdeployerver: "1.13.0"
   tasks:
     - name: install ssh-server
       package:
@@ -77,18 +77,13 @@
         mode: 0644
         owner: vagrant
         timeout: 600
-    - name: repack MySQL 8
-      shell: xzcat /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz | gzip > /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
-      args:
-        creates: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
-        warn: false
     - name: unpack percona server with dbdeploy
       shell: dbdeployer unpack /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz --sandbox-binary=/home/vagrant/opt/percona
       args:
         creates: /home/vagrant/opt/percona/5.7.23
       become_user: vagrant
     - name: unpack mysql 8.0 with dbdeploy
-      shell: dbdeployer unpack /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.gz
+      shell: dbdeployer unpack /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
       args:
         creates: /home/vagrant/opt/mysql/8.0.13
       become_user: vagrant

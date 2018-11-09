@@ -8,6 +8,6 @@ use test < /home/vagrant/tutorial/011-prepared.setup.sql
 sb oltp_read_write.lua --table-size=1000 --mysql-db=test prepare
 ) &>load.log &
 /usr/bin/clear
-tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql --prompt='mysql> ' -t test
 cleanup
 

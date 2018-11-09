@@ -11,6 +11,6 @@ use sbtest -e "select min(pad), max(pad) from sbtest.sbtest1 where k > 100" &>/d
 sb oltp_read_write.lua --threads=4 --max-requests=0 --max-time=100000 --point-selects=1 --simple-ranges=1 --sum-ranges=1 --order-ranges=1 --distinct-ranges=1 --index-updates=0 --non-index-updates=1 run &
 ) &>load.log &
 /usr/bin/clear
-tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql -s --prompt='mysql> ' -t test
+tmux new-session -n mysql /home/vagrant/tutorial/run_command_with_hint.sh "$HINT" my sql --prompt='mysql> ' -t test
 cleanup
 
