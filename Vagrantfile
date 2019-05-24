@@ -15,14 +15,15 @@ Vagrant.configure("2") do |config|
   end
   config.vm.provider "aws" do |aws, override|
     override.vm.box = "dummy"
-    override.ssh.private_key_path = '~/.ssh/id_rsa-hadar'
+    override.ssh.private_key_path = '~/_private/sveta-p_s-tutorial.pem'
     # Specify VM parameters
     # aws.access_key_id = "YOUR KEY"
     # aws.secret_access_key = "YOUR SECRET KEY"
     # aws.session_token = "SESSION TOKEN"
-    aws.keypair_name = "nickolay.ihalainen"
+    aws.keypair_name = "sveta-p_s-tutorial"
     # https://cloud-images.ubuntu.com/locator/ec2/
-    aws.ami = "ami-0cc10786e1d202f0c"
+    # aws.ami = "ami-0cc10786e1d202f0c"
+    aws.ami = "ami-024a64a6685d05041"
     override.ssh.username = "ubuntu"
 
     aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 }]

@@ -1,5 +1,5 @@
 #!/bin/bash
-MYSQL_VER=5.7.23
+MYSQL_VER=8.0.15
 source /home/vagrant/tutorial/common.sh
 dbdeployer deploy replication $MYSQL_VER --sandbox-binary=/home/vagrant/opt/percona -c 'innodb_buffer_pool_size=64M' --nodes=2 --base-port $SANDBOX_PORT
 export PATH=/home/$USER/sandboxes/rsandbox_${MYSQL_VER//./_}:$PATH

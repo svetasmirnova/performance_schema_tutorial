@@ -1,7 +1,7 @@
 #!/bin/bash
-DESCRIPTION="Find the most important slow queries, MySQL 8.0"
+DESCRIPTION="Find the most important slow queries"
 HINT="Use Ctrl+b,c to create new window\nUse Ctrl+b,p or Ctrl+b,n to switch between next and previous window\n\nType CALL help_task() for help\n"
-source /home/vagrant/tutorial/common-single-m8.sh
+source /home/vagrant/tutorial/common-single.sh
 use -e "create database sbtest"
 use sbtest < /home/vagrant/tutorial/010-statements_summary.setup.sql
 use sbtest < /home/vagrant/tutorial/010-statements_summary.dump.sql

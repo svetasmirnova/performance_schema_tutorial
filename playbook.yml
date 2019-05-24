@@ -65,27 +65,15 @@
         - mysql
     - name: Download percona server
       get_url:
-        url: https://www.percona.com/downloads/Percona-Server-LATEST/Percona-Server-5.7.23-23/binary/tarball/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
-        dest: /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz
-        mode: 0644
-        owner: vagrant
-        timeout: 600
-    - name: Download MySQL 8
-      get_url:
-        url: https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
-        dest: /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
+        url: https://www.percona.com/downloads/Percona-Server-LATEST/Percona-Server-8.0.15-6/binary/tarball/Percona-Server-8.0.15-6-Linux.x86_64.ssl102.tar.gz
+        dest: /home/vagrant/Percona-Server-8.0.15-6-Linux.x86_64.ssl102.tar.gz
         mode: 0644
         owner: vagrant
         timeout: 600
     - name: unpack percona server with dbdeploy
-      shell: dbdeployer unpack /home/vagrant/Percona-Server-5.7.23-23-Linux.x86_64.ssl102.tar.gz --sandbox-binary=/home/vagrant/opt/percona
+      shell: dbdeployer unpack /home/vagrant/Percona-Server-8.0.15-6-Linux.x86_64.ssl102.tar.gz --sandbox-binary=/home/vagrant/opt/percona
       args:
-        creates: /home/vagrant/opt/percona/5.7.23
-      become_user: vagrant
-    - name: unpack mysql 8.0 with dbdeploy
-      shell: dbdeployer unpack /home/vagrant/mysql-8.0.13-linux-glibc2.12-x86_64.tar.xz
-      args:
-        creates: /home/vagrant/opt/mysql/8.0.13
+        creates: /home/vagrant/opt/percona/8.0.15
       become_user: vagrant
     - name: install sysbench
       package:
