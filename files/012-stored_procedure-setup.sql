@@ -26,7 +26,7 @@ CREATE PROCEDURE help_task()
 
 CREATE PROCEDURE help_solve()
  BEGIN
-   SELECT "Enable required Performance schema:\nupdate performance_schema.setup_instruments set ENABLED='YES' where name like 'statement/sp%';UPDATE setup_consumers SET ENABLED = ‘YES' WHERE NAME LIKE 'events_statements%';\nYou can run these statements with CALL task_prepare(); command\nTo find out what was executed inside stored procedure each time you run it you can run SELECT thread_id, event_name, sql_text FROM performance_schema.events_statements_history_long WHERE event_name LIKE 'statement/sp%';\nTo have output nicer set pager to less: \\P less" AS "task";
+   SELECT "Enable required Performance schema:\nupdate performance_schema.setup_instruments set ENABLED='YES' where name like 'statement/sp%';UPDATE performance_schema.setup_consumers SET ENABLED = 'YES' WHERE NAME LIKE 'events_statements%';\nYou can run these statements with CALL task_prepare(); command\nTo find out what was executed inside stored procedure each time you run it you can run SELECT thread_id, event_name, sql_text FROM performance_schema.events_statements_history_long WHERE event_name LIKE 'statement/sp%';\nTo have output nicer set pager to less: \\P less" AS "task";
  END//
 
 CREATE PROCEDURE task_prepare()
